@@ -36,19 +36,174 @@ Trying to understand the TypeDB type system.
 %----------------------------------------------------------------------
 
 
+%----------------------------------------------------------------------
+\section{Background}\label{sec:background}
+
+The main sources of information are the following:
+
+\begin{itemize}
+\item the TypeDB documentation available on the
+  web\footnote{\url{https://docs.vaticle.com/}},
+  henceforth referenced as [DOC];
+\item a video about knowledge
+  graphs\footnote{\url{https://vaticle.com/use-cases/knowledge-graphs}},
+  henceforth referenced as [KGV], or for a particular instant (minute, second)
+  within this video as [KGV:min:sec] or simply [KGV:min]
+\end{itemize}
+
+When the documentation does not
+provide a unique answer, we have conducted experiments with TypeDB to
+investigate the effective system behavior, see \secref{sec:questions}.
+
 
 %----------------------------------------------------------------------
-\section{The Type System, Conceptually}
+\section{The Type System, Conceptually}\label{sec:type_system_conceptually}
 
 The following gives an abstract account of the TypeDB type system.
 
+%......................................................................
+\subsection{Structural description}
+
+We distinguish three levels of structural description:
+\begin{itemize}
+\item Kinds (\secref{sec:structure_kinds}) are predefined concepts of the meta-model
+\item Types (\secref{sec:structure_types}) are user-definable entities of a DB
+  schema. A type is of a kind.
+\item Instances (\secref{sec:structure_instances}) are user-definable entities
+  of a DB. An instance is of a type.
+\end{itemize}
+
+\subsubsection{Kinds}\label{sec:structure_kinds}
+
+The meta-model is composed of the following elements which we refer to as
+\emph{kinds}, also see [KGV:16]:
+\begin{itemize}
+\item Thing
+\item Attribute
+\item Entity
+\item Relation
+\item Role
+\end{itemize}
+In the following treatment, we ignore rules, which are also mentioned in the
+meta-model.
+
+In the meta-model:
+\begin{itemize}
+\item Attribute, Entity, Relation are related to Thing via a \texttt{sub}
+  relation;
+\item each of Entity, Attribute, Relation, Role is related to itself via a
+  \texttt{sub} relation;
+\item Thing is related to Attribute via an \texttt{owns} relation;
+\item Relation is related to Role via a \texttt{relates} relation;
+\item Thing is related to Role via a \texttt{plays} relation.
+\end{itemize}
+
+
+\paragraph{Kind rules}
+
+
+$$
+\infer{\Gamma \vdash kind(Attribute)}{}
+\quad
+\infer{\Gamma \vdash kind(Entity)}{}
+\quad
+\infer{\Gamma \vdash kind(Relation)}{}
+\quad
+\infer{\Gamma \vdash kind(Role)}{}
+$$
+
+
+
+\subsubsection{Types}\label{sec:structure_types}
+
+In a schema definition (following the keyword \texttt{define}), new
+(attribute; entity; relation; role) types are introduced with the keyword
+\texttt{sub}. These subtype relations are gathered in a context. For a subtype
+declaration, we write $T' \preceq T$ instead of \texttt{T' sub T}.
+
+\paragraph{Well-formedness rules} The following rules define well-formedness
+of a context. The function $names$ retrieves all the newly introduced names of
+a context.
+
+
+$$
+  \infer{wf(\Gamma, E \preceq T)}{
+  wf(\Gamma) & E \notin names(\Gamma)
+}
+$$
+
+$$
+\infer{\Gamma \vdash \mathtt{attribute} : Attribute}{}
+\quad
+\infer{\Gamma \vdash \mathtt{entity} : Entity}{}
+\quad
+\infer{\Gamma \vdash \mathtt{relation} : Relation}{}
+\quad
+\infer{\Gamma \vdash \mathtt{role} : Role}{}
+$$
+
+$$
+\infer{\Gamma, T' \preceq T \vdash T' : K}{
+  wf(\Gamma, T' \preceq T) & \Gamma \vdash T : K & kind(K)
+}
+$$
+
+
+
+\subsubsection{Instances}\label{sec:structure_instances}
+
+
+
+
+%......................................................................
+\subsection{Semantics}
+
+
 
 
 
 %----------------------------------------------------------------------
-\section{Open Questions}
+\section{Open and Solved Questions}\label{sec:questions}
+
+%......................................................................
+\subsection{Type Declarations}
 
 
+\begin{enumerate}
+\item Is it possible to introduce the same name both as an entity and as a
+  relation type, something like:
+
+  \begin{alltt}
+    Foo sub entity
+    Foo sub relation
+  \end{alltt}
+
+\item Is the type hierarchy acyclic, or is it possible to have
+  \begin{alltt}
+    C1 sub C2
+    C2 sub C1
+  \end{alltt}
+  or to introduce a type several times, like
+  \begin{alltt}
+    C sub entity
+    C1 sub C
+    C2 sub C
+    D sub C1
+    D sub C2
+  \end{alltt}
+\end{enumerate}
+
+
+%......................................................................
+\subsection{Objects and Identities}
+
+\begin{enumerate}
+\item We have already tried out to create two entities having identical
+  attributes but which become two distinct objects.
+
+  The question is whether there are also multi-relations, i.e. two entities
+  can be related by the same relation several times.
+\end{enumerate}
 
 %----------------------------------------------------------------------
 \bibliographystyle{splncs04}
@@ -59,7 +214,7 @@ The following gives an abstract account of the TypeDB type system.
 \end{document}
 
 %%% Local Variables: 
-%%% mode: latex
+%%% mode: latex 
 %%% TeX-master: t
 %%% coding: utf-8
 %%% End: 
