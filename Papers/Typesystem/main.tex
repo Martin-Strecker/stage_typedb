@@ -123,8 +123,7 @@ declaration, we write $T' \preceq T$ instead of \texttt{T' sub T}.
 
 \paragraph{Well-formedness rules} The following rules define well-formedness
 of a context. The function $names$ retrieves all the newly introduced names of
-a context.
-
+a context.\remms{TBD}
 
 $$
   \infer{wf(\Gamma, E \preceq T)}{
@@ -132,6 +131,14 @@ $$
 }
 $$
 
+
+\paragraph{Judgement: Type is of a Kind (rule set~1)}
+The following rules derive a judgement $\Gamma \vdash T: K$ saying that type
+$T$ is of kind $K$, where $K$ is one of the four kinds of
+\secref{sec:structure_kinds}. For example, one could derive: 
+$person \preceq entity \vdash person: Entity$.
+
+Base case:
 $$
 \infer{\Gamma \vdash \mathtt{attribute} : Attribute}{}
 \quad
@@ -142,12 +149,51 @@ $$
 \infer{\Gamma \vdash \mathtt{role} : Role}{}
 $$
 
+Subtype:
 $$
 \infer{\Gamma, T' \preceq T \vdash T' : K}{
-  wf(\Gamma, T' \preceq T) & \Gamma \vdash T : K & kind(K)
+  wf(\Gamma, T' \preceq T) & \Gamma \vdash T : K 
 }
 $$
 
+Weakening:
+$$
+\infer{\Gamma, \Gamma' \vdash T : K}{
+  wf(\Gamma, \Gamma')
+  & 
+  \Gamma \vdash T : K
+}
+$$
+
+
+\paragraph{Judgement: Type is of a Kind (rule set~2)}
+
+One may doubt that \texttt{entity} is itself a type (and similarly for
+\texttt{attribute} etc.), see the questions in
+\secref{sec:questions_type_decls}.
+
+Base case:
+$$
+\infer{\Gamma, T' \preceq K \vdash T' : K}{
+  wf(\Gamma, T' \preceq K)  & kind(K)
+}
+$$
+
+Subtype:
+$$
+\infer{\Gamma, T' \preceq T \vdash T' : K}{
+  wf(\Gamma, T' \preceq T) & \Gamma \vdash T : K 
+}
+$$
+
+Weakening:
+$$
+\infer{\Gamma, \Gamma' \vdash T : K}{
+  wf(\Gamma, \Gamma')
+  & 
+  \Gamma \vdash T : K
+}
+$$
 
 
 \subsubsection{Instances}\label{sec:structure_instances}
@@ -166,7 +212,7 @@ $$
 \section{Open and Solved Questions}\label{sec:questions}
 
 %......................................................................
-\subsection{Type Declarations}
+\subsection{Type Declarations}\label{sec:questions_type_decls}
 
 
 \begin{enumerate}
@@ -174,23 +220,51 @@ $$
   relation type, something like:
 
   \begin{alltt}
-    Foo sub entity
-    Foo sub relation
+    Foo sub entity;
+    Foo sub relation;
   \end{alltt}
 
 \item Is the type hierarchy acyclic, or is it possible to have
   \begin{alltt}
-    C1 sub C2
-    C2 sub C1
+    C1 sub C2;
+    C2 sub C1;
   \end{alltt}
   or to introduce a type several times, like
   \begin{alltt}
-    C sub entity
-    C1 sub C
-    C2 sub C
-    D sub C1
-    D sub C2
+    C sub entity;
+    C1 sub C;
+    C2 sub C;
+    D sub C1;
+    D sub C2;
   \end{alltt}
+
+\item It is not clear whether \texttt{entity} is indeed a type or only a kind
+  in the sense of \secref{sec:structure_kinds}. Syntactically, it does not
+  seem possible to declare a relation that has \texttt{entity} as its domain.
+
+  A similar question holds for \texttt{attribute}. Would it be possible to
+  write the following?
+
+  \begin{alltt}
+  e sub entity,
+    owns attribute;
+  \end{alltt}
+
+  Probably not, because (semantically) the attribute would not have an
+  associated value. A follow-up question to this is if attribute definitions
+  can have 0 or $\geq 2$ associated \texttt{value} declarations, such as in
+  \begin{alltt}
+    a sub attribute;
+  \end{alltt}
+  (without value),  or
+  \begin{alltt}
+    a sub attribute,
+    value string,
+    value long;
+  \end{alltt}
+  (with several incompatible value declarations).
+  
+  
 \end{enumerate}
 
 
