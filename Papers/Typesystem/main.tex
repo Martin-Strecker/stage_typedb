@@ -196,6 +196,15 @@ $$
 $$
 
 
+\subsubsection{Relations and Attributes}\label{sec:structure_rels_attribs}
+
+The \texttt{relates} declarations seem redundant, possibly even in
+contradiction with the \texttt{plays} declarations, see
+\secref{sec:questions_rels_attribs}. They are ignored here; we only discuss
+\texttt{plays} declarations.
+
+
+
 \subsubsection{Instances}\label{sec:structure_instances}
 
 
@@ -265,6 +274,83 @@ $$
   (with several incompatible value declarations).
   
   
+\end{enumerate}
+
+\subsection{Relations and Attributes}\label{sec:questions_rels_attribs}
+
+\paragraph{Redundancy / conflict} The \texttt{relates} declarations seem to be
+redundant and possibly conflict with \texttt{plays} declarations. The
+following questions try to clarify the situation.
+
+\begin{enumerate}
+\item Missing \texttt{relates} declaration: What happens if there is no
+  \texttt{relates} declaration but the role is used in a \texttt{plays}
+  clause, such as in the following, if there is no \texttt{relates role1}
+  declaration? 
+
+  \begin{alltt}
+rel1 sub relation;
+
+ent1 sub entity,
+  plays rel1:role1;
+  \end{alltt}
+
+\item Contradictory \texttt{relates} and \texttt{plays} declarations: What
+  happens if a role is used in conjunction with a relation for which it has
+  not been declared, such as the following:
+
+  \begin{alltt}
+rel1 sub relation,
+  relates role1;
+
+rel2 sub relation,
+  relates role2;
+
+ent1 sub entity,
+  plays rel2:role1;
+  \end{alltt}
+
+\end{enumerate}
+
+\paragraph{Refinement and overriding} of \texttt{plays} declarations. In the
+following examples, we assume that all the required \texttt{relates}
+declarations have been done, and only concentrate on the \texttt{plays}
+declarations.
+
+\begin{enumerate}
+\item Is it possible to redeclare a role in two unrelated relations /
+  entities? This would amount to \emph{overloading}.
+
+  \begin{alltt}
+rel1 sub relation,
+     relates role1;
+rel2 sub relation,
+     relates role1;
+
+ent1 sub entity,
+  plays rel1:role1;
+
+ent2 sub entity,
+  plays rel2:role1;
+  \end{alltt}
+  
+\item Is it possible to redeclare a role? This would amount to
+  \emph{overriding}. The following illustrates the case for two relations that
+  are subrelations:
+  
+  \begin{alltt}
+rel1 sub relation,
+     relates role1;
+rel2 sub rel1,
+     relates role1;
+
+ent1 sub entity,
+  plays rel1:role1;
+
+ent2 sub entity,
+  plays rel2:role1;
+  \end{alltt}
+
 \end{enumerate}
 
 
