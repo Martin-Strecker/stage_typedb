@@ -233,13 +233,20 @@ contradiction with the \texttt{plays} declarations, see
     Foo sub relation;
   \end{alltt}
   
-\emph{Answer : }
+\emph{Answer : It shows an error : Invalid Query Pattern : the type variable 'test' has multiple 'sub' constraints.	 }
+	
+	
+
 	
 \item Is the type hierarchy acyclic, or is it possible to have
   \begin{alltt}
     C1 sub C2;
     C2 sub C1;
   \end{alltt}
+
+\emph{Answer : It shows an error : Invalid Type Write : there is a cyclic type hierarchy, which is not allowed: '[C2, C1]'. }  
+  
+  
   or to introduce a type several times, like
   \begin{alltt}
     C sub entity;
@@ -248,6 +255,8 @@ contradiction with the \texttt{plays} declarations, see
     D sub C1;
     D sub C2;
   \end{alltt}
+  
+\emph{Answer : It shows an error : Invalid Query Pattern : the type variable 'd' has multiple 'sub' constraints. }  
 
 \item It is not clear whether \texttt{entity} is indeed a type or only a kind
   in the sense of \secref{sec:structure_kinds}. Syntactically, it does not
@@ -276,6 +285,84 @@ contradiction with the \texttt{plays} declarations, see
   (with several incompatible value declarations).
   
   
+\item Is it possible for different entities to own the same attribute ? 
+Something like :
+
+  \begin{alltt}
+     ent1 sub entity,
+       owns att1;
+     	
+     ent2 sub entity,
+       owns att1;
+    		
+    	 att1 sub attribute,
+       value string;
+  \end{alltt}
+  
+\emph{Answer : It seems to work because it doesn't show any error. It also works using a relation related to this two entities, which owns this same attribute.  
+}  
+  
+  
+  
+  
+  
+or have the same attribute of an entity for which it is a (sous-entité) :
+
+\begin{alltt}
+     ent1 sub entity,
+       owns att1;
+     	
+     ent2 sub ent1,
+       owns att1;
+    		
+    	 att1 sub attribute,
+       value string;
+  \end{alltt}
+  
+\emph{Answer : It doesn't work : Invalid Type Write: The attribute type 'att1' has been inherited or overridden, and cannot be redeclared as an attribute. }  
+
+
+
+
+
+\item Is it possible to have :
+
+  \begin{alltt}
+     R1 sub relation,
+     relates role1;
+    
+     R2 sub R1,
+      relates role1;
+      
+    E1 sub entity,
+    plays R1:role1;
+    
+    E2 sub E1,
+    plays R2:role1;
+  \end{alltt}
+  
+\emph{Answer : It doesn't work : Invalid Type Write: The role type 'role1' is already declared by a supertype of 'R2'.
+}  
+
+or to have
+
+\begin{alltt}
+     R1 sub relation,
+     relates role1;
+    
+     R2 sub R1;
+      
+    E1 sub entity,
+    plays R1:role1;
+    
+    E2 sub E1,
+    plays R2:role1;
+  \end{alltt}
+  
+\emph{Answer : It doesn't work : Invalid Type Write: The role type 'R1:role1' has been inherited or overridden, and cannot be redeclared.
+}  
+
+
 \end{enumerate}
 
 \subsection{Relations and Attributes}\label{sec:questions_rels_attribs}
@@ -297,6 +384,9 @@ ent1 sub entity,
   plays rel1:role1;
   \end{alltt}
 
+\emph{Answer : It shows an error : Invalid Type Read: The type 'rel1:role1' does not exist. }
+
+
 \item Contradictory \texttt{relates} and \texttt{plays} declarations: What
   happens if a role is used in conjunction with a relation for which it has
   not been declared, such as the following:
@@ -311,6 +401,9 @@ rel2 sub relation,
 ent1 sub entity,
   plays rel2:role1;
   \end{alltt}
+
+\emph{Answer : It seems to work because it doesn't show any error. }
+
 
 \end{enumerate}
 
@@ -336,6 +429,9 @@ ent2 sub entity,
   plays rel2:role1;
   \end{alltt}
   
+ 
+\emph{Answer : It seems to work because it doesn't show any error. }
+ 
 \item Is it possible to redeclare a role? This would amount to
   \emph{overriding}. The following illustrates the case for two relations that
   are subrelations:
@@ -352,6 +448,9 @@ ent1 sub entity,
 ent2 sub entity,
   plays rel2:role1;
   \end{alltt}
+
+\emph{Answer : It shows an error : Invalid Type Write: The role type 'role1' is already declared by a supertype of 'rel2'. }
+  
 
 \end{enumerate}
 
@@ -371,8 +470,7 @@ ent2 sub entity,
 \bibliographystyle{splncs04}
 \bibliography{main}
 
-
-
+))
 \end{document}
 
 %%% Local Variables: 
