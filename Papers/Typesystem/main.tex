@@ -375,7 +375,7 @@ following questions try to clarify the situation.
 \item Missing \texttt{relates} declaration: What happens if there is no
   \texttt{relates} declaration but the role is used in a \texttt{plays}
   clause, such as in the following, if there is no \texttt{relates role1}
-  declaration? 
+  declaration?
 
   \begin{alltt}
 rel1 sub relation;
@@ -465,6 +465,141 @@ ent2 sub entity,
   The question is whether there are also multi-relations, i.e. two entities
   can be related by the same relation several times.
 \end{enumerate}
+
+
+
+\subsection{Rules}
+
+To read data coming from Typedb rules, we have to add --infer true at the end of the read command : 
+\begin{alltt}
+transaction database-name data read --infer true
+\end{alltt}
+
+
+\begin{enumerate}
+\item Is it possible to define a rule as :
+\begin{alltt}
+personne sub entity,
+    plays vip:personne-role,
+    owns salaire;
+    
+vip sub personne;
+
+salaire sub attribute,
+  value long;
+
+rule est-vip:
+when {
+  \$p isa personne, has salaire \$s;
+  \$s > 10000;
+} then {
+ \$p isa vip;
+};
+\end{alltt}
+
+\emph{Answer : Probably not, because it shows an error : Rule 'est-vip' 'then' '\$p isa vip': must be exactly one attribute ownership, or exactly one relation.
+So we can conclude that rules can only affect attributes or relations. }
+
+
+\end{enumerate}
+
+
+\section{How to use the TypeDB System in Windows 11}
+
+\subsection{Using the terminal console}
+
+
+\subsubsection{Opening the server}
+
+\begin{itemize}
+\item go to the right folder which contains the typedb.bat file ( example : typedb-all-windows-2.10.0/typedb-all-windows-2.10.0/ )
+\item open the server : \begin{alltt}./typedb.bat server \end{alltt}
+\item let that window opened in background
+\end{itemize}
+
+\subsubsection{Opening the console}
+\begin{itemize}
+\item open a new terminal, and go to the same folder as before
+\item open the console :   \begin{alltt}./typedb.bat console\end{alltt}     
+\end{itemize}
+
+\subsubsection{Console commands}
+
+Once the console is opened, we can type several commands to read or write informations about the databases. The console will allow us to communicate with the databases, so it is useful to know some of the most important orders we can use :
+
+\begin{itemize}
+\item to list the several databases existing in the server :    \begin{alltt}database list\end{alltt}       
+\item to show us the schema of a particular database :    \begin{alltt}database schema nomBd\end{alltt}       
+\item To quit the console :                        \begin{alltt}exit\end{alltt}  
+\end{itemize}
+
+  \subsubsection{Transactions}
+We can also use this console to make transactions, which are a block we open, and that we can commit at the end only if the order we typed was possible to make. This allows us to make the command at once and in case of an error, avoid that only one part of the order is made.
+
+\begin{enumerate}
+\item Opening  the transaction\\
+These transactions can be used in two modes : write or read. Also, we have to specify if we want to point to the schema or the data :
+
+\begin{alltt}
+transaction nomBd data write
+transaction nomBd data read
+transaction nomBd schema write
+\end{alltt}       
+
+\item Write the order we want to make in this transaction\\
+We can type a request adapted to the mode we have chosen (for example for a read transaction, use a read request (match, get), or for a data write transaction, use an order which writes, modifies or deletes the data.) For more information about the different requests, see below in the part requests.\\
+
+It can also be useful to know that we can use the ‘source’ command to avoid us to type the requests here in the terminal, using a file containing it : 
+        source example/file.tql
+It is mostly used to define the schema, in a schema write transaction.\\
+
+\emph{Note : sometimes, after returning our order, nothing is happening. In that case we have to do a ctrl c.}\\
+
+\item Commit the transaction
+\begin{itemize}
+\item In the write mode, it is very important not to forget to type commit after having returned our order. Else, even if our order didn’t show any error, nothing will be made.
+\item In the read mode, to quit, ctrl c
+\end{itemize}
+
+\end{enumerate}
+
+
+\subsection{Using the App}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 %----------------------------------------------------------------------
 \bibliographystyle{splncs04}
