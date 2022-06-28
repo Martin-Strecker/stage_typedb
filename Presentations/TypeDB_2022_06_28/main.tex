@@ -1,0 +1,240 @@
+\documentclass{beamer}
+
+
+\input{settings}
+\input{defs}
+
+\title[Roundtable Vaticle / TypeDB  -- Toulouse / Grenoble]{Roundtable Vaticle / TypeDB -- Universities Toulouse / Grenoble}
+
+\author{}
+\date{2022-06-28}
+
+
+%======================================================================
+
+\begin{document}
+
+
+%======================================================================
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+
+%======================================================================
+\section{Presentation of participants}
+
+%-------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{On this call}
+
+  \blue{Vaticle / TypeDB}
+
+  \begin{itemize}
+  \item Haikal Pribadi
+  \end{itemize}
+
+  \vspace{3mm}
+
+  \blue{Toulouse}
+
+  \begin{itemize}
+  \item Rachid Echahed (CNRS researcher, Grenoble University / LIG)\\
+    \url{https://lig-membres.imag.fr/echahed/}
+  \item Didier El Baz (CNRS researcher, Toulouse University / LAAS)\\
+    \url{https://homepages.laas.fr/elbaz/}
+  \item Ralph Matthes (CNRS researcher, Toulouse University / IRIT)\\
+    \url{https://www.irit.fr/~Ralph.Matthes/}
+  \item Cécile Prieur (Intern, Toulouse University / IRIT)
+  \item Martin Strecker (Associate professor, Toulouse University / IRIT)\\
+    \url{https://www.irit.fr/~Martin.Strecker/}
+  \end{itemize}
+
+\end{frame}
+
+%-------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Research experience and previous projects}
+
+  \blue{Generally:}
+  \begin{itemize}
+  \item Programming language semantics
+  \item Type systems / logics
+  \item Formal methods 
+  \item High performance computing
+  \end{itemize}
+
+  \blue{Specifically:}
+  \begin{itemize}
+  \item Graph transformations with assured correctness guarantees
+    \begin{itemize}
+    \item using Description Logics / OWL / RDF
+    \item \dots{} and beyond
+    \end{itemize}
+  \item Computations on very large graphs using GPUs
+  \end{itemize}
+
+\end{frame}
+
+%======================================================================
+\section{Topics for collaboration}
+
+%-------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{General topics}
+
+  \begin{itemize}
+  \item \emph{Short-term:} Understanding and documenting TypeDB type system
+  \item \emph{Mid-term:} Introducing integrity constraints (dynamic)
+  \item \emph{Long-term:} Verifying integrity constraints (static)
+  \item Using typing and integrity constraints for improving performance
+  \end{itemize}
+
+\end{frame}
+
+
+%-------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Typing scenarios in TypeDB}
+
+  \begin{alltt}
+define
+
+a_entity sub entity,
+    plays r_relation:a_role,
+    owns serial_num;
+
+b_entity sub entity,
+    plays r_relation:b_role,
+    owns serial_num;
+
+r_relation sub relation,
+    relates a_role,
+    relates b_role;
+
+serial_num sub attribute,
+    value long;
+  \end{alltt}
+  
+\end{frame}
+
+
+%-------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Typing scenarios in TypeDB}
+
+  \blue{Type error}
+  \begin{verbatim}
+match
+    $a isa a_entity; 
+    $r (a_role: $a, b_role: $a) isa r_relation;
+get $r;
+\end{verbatim}
+  \emph{[QRY16] Invalid Query Pattern: The pattern  .... can never be satisfied in the current schema.}
+
+\end{frame}
+
+
+%-------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Typing scenarios in TypeDB}
+
+  \blue{No type error}
+  \begin{verbatim}
+match
+    $a isa a_entity, has serial_num 1; 
+insert $r (a_role: $a, b_role: $a) isa r_relation;
+\end{verbatim}
+  \emph{[QRY16] Invalid Query Pattern: The pattern  .... can never be satisfied in the current schema.}
+
+\vspace{3mm}
+\blue{What about a static type error / warning?}
+
+\end{frame}
+
+
+%-------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Typing scenarios in TypeDB}
+
+Why not to emit a warning:
+
+  \blue{No type error}
+  \begin{verbatim}
+define
+
+animal sub entity, abstract;
+dog sub animal;
+
+person sub animal, abstract;
+man sub person, plays marriage:husband;
+woman sub person, plays marriage:wife;
+
+marriage sub relation, relates husband, relates wife;
+\end{verbatim}
+
+
+\vspace{3mm}
+\blue{What about a static type error / warning?}
+
+\end{frame}
+
+
+%-------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Typing scenarios in TypeDB}
+
+  \blue{Inconsistent precondition} (no warning):
+
+\begin{verbatim}
+match
+    $a isa a_entity; 
+    $b isa b_entity;
+    not {$b isa b_entity;};
+    $r (a_role: $a, b_role: $b) isa r_relation;
+get $r;
+\end{verbatim}
+  
+\end{frame}
+
+
+%-------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Understanding and documenting TypeDB}
+
+  \begin{itemize}
+  \item Understanding the type system
+  \item Documenting it
+
+\emph{Base case:}
+$$
+\infer{\Gamma, T' \preceq K \vdash T' : K}{
+  wf(\Gamma, T' \preceq K)  & kind(K)
+}
+$$
+
+\emph{Subtype:}
+$$
+\infer{\Gamma, T' \preceq T \vdash T' : K}{
+  wf(\Gamma, T' \preceq T) & \Gamma \vdash T : K 
+}
+$$
+    
+  \item Proving type soundness
+  \end{itemize}
+
+\end{frame}
+
+  
+%-------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Verification with proof assisstants}
+
+\includegraphics[scale=0.22]{screenshot_isabelle.png}
+
+\end{frame}
+
+
+
+%-------------------------------------------------------------
+
+\end{document}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% coding: utf-8
+%%% End: 
