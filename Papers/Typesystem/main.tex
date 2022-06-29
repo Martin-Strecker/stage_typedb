@@ -225,38 +225,9 @@ contradiction with the \texttt{plays} declarations, see
 
 
 \begin{enumerate}
-\item Is it possible to introduce the same name both as an entity and as a
-  relation type, something like:
-
-  \begin{alltt}
-    Foo sub entity;
-    Foo sub relation;
-  \end{alltt}
-  
-\emph{Answer : It shows an error : Invalid Query Pattern : the type variable 'test' has multiple 'sub' constraints.	 }
-	
-	
 
 	
-\item Is the type hierarchy acyclic, or is it possible to have
-  \begin{alltt}
-    C1 sub C2;
-    C2 sub C1;
-  \end{alltt}
 
-\emph{Answer : It shows an error : Invalid Type Write : there is a cyclic type hierarchy, which is not allowed: '[C2, C1]'. }  
-  
-  
-  or to introduce a type several times, like
-  \begin{alltt}
-    C sub entity;
-    C1 sub C;
-    C2 sub C;
-    D sub C1;
-    D sub C2;
-  \end{alltt}
-  
-\emph{Answer : It shows an error : Invalid Query Pattern : the type variable 'd' has multiple 'sub' constraints. }  
 
 \item It is not clear whether \texttt{entity} is indeed a type or only a kind
   in the sense of \secref{sec:structure_kinds}. Syntactically, it does not
@@ -283,85 +254,6 @@ contradiction with the \texttt{plays} declarations, see
     value long;
   \end{alltt}
   (with several incompatible value declarations).
-  
-  
-\item Is it possible for different entities to own the same attribute ? 
-Something like :
-
-  \begin{alltt}
-     ent1 sub entity,
-       owns att1;
-     	
-     ent2 sub entity,
-       owns att1;
-    		
-    	 att1 sub attribute,
-       value string;
-  \end{alltt}
-  
-\emph{Answer : It seems to work because it doesn't show any error. It also works using a relation related to this two entities, which owns this same attribute.  
-}  
-  
-  
-  
-  
-  
-or have the same attribute of an entity for which it is a (sous-entité) :
-
-\begin{alltt}
-     ent1 sub entity,
-       owns att1;
-     	
-     ent2 sub ent1,
-       owns att1;
-    		
-    	 att1 sub attribute,
-       value string;
-  \end{alltt}
-  
-\emph{Answer : It doesn't work : Invalid Type Write: The attribute type 'att1' has been inherited or overridden, and cannot be redeclared as an attribute. }  
-
-
-
-
-
-\item Is it possible to have :
-
-  \begin{alltt}
-     R1 sub relation,
-     relates role1;
-    
-     R2 sub R1,
-      relates role1;
-      
-    E1 sub entity,
-    plays R1:role1;
-    
-    E2 sub E1,
-    plays R2:role1;
-  \end{alltt}
-  
-\emph{Answer : It doesn't work : Invalid Type Write: The role type 'role1' is already declared by a supertype of 'R2'.
-}  
-
-or to have
-
-\begin{alltt}
-     R1 sub relation,
-     relates role1;
-    
-     R2 sub R1;
-      
-    E1 sub entity,
-    plays R1:role1;
-    
-    E2 sub E1,
-    plays R2:role1;
-  \end{alltt}
-  
-\emph{Answer : It doesn't work : Invalid Type Write: The role type 'R1:role1' has been inherited or overridden, and cannot be redeclared.
-}  
-
 
 \end{enumerate}
 
@@ -372,20 +264,6 @@ redundant and possibly conflict with \texttt{plays} declarations. The
 following questions try to clarify the situation.
 
 \begin{enumerate}
-\item Missing \texttt{relates} declaration: What happens if there is no
-  \texttt{relates} declaration but the role is used in a \texttt{plays}
-  clause, such as in the following, if there is no \texttt{relates role1}
-  declaration?
-
-  \begin{alltt}
-rel1 sub relation;
-
-ent1 sub entity,
-  plays rel1:role1;
-  \end{alltt}
-
-\emph{Answer : It shows an error : Invalid Type Read: The type 'rel1:role1' does not exist. }
-
 
 \item Contradictory \texttt{relates} and \texttt{plays} declarations: What
   happens if a role is used in conjunction with a relation for which it has
@@ -512,15 +390,15 @@ So we can conclude that rules can only affect attributes or relations. }
 \subsubsection{Opening the server}
 
 \begin{itemize}
-\item go to the right folder which contains the typedb.bat file ( example : typedb-all-windows-2.10.0/typedb-all-windows-2.10.0/ )
-\item open the server : \begin{alltt}./typedb.bat server \end{alltt}
-\item let that window opened in background
+\item Go to the right folder which contains the typedb.bat file ( example : typedb-all-windows-2.10.0/typedb-all-windows-2.10.0/ )
+\item Open the server : \begin{alltt}./typedb.bat server \end{alltt}
+\item Let that window opened in background
 \end{itemize}
 
 \subsubsection{Opening the console}
 \begin{itemize}
-\item open a new terminal, and go to the same folder as before
-\item open the console :   \begin{alltt}./typedb.bat console\end{alltt}     
+\item Open a new terminal, and go to the same folder as before
+\item Open the console :   \begin{alltt}./typedb.bat console\end{alltt}     
 \end{itemize}
 
 \subsubsection{Console commands}
@@ -528,8 +406,8 @@ So we can conclude that rules can only affect attributes or relations. }
 Once the console is opened, we can type several commands to read or write informations about the databases. The console will allow us to communicate with the databases, so it is useful to know some of the most important orders we can use :
 
 \begin{itemize}
-\item to list the several databases existing in the server :    \begin{alltt}database list\end{alltt}       
-\item to show us the schema of a particular database :    \begin{alltt}database schema nomBd\end{alltt}       
+\item To list the several databases existing in the server :    \begin{alltt}database list\end{alltt}       
+\item To show us the schema of a particular database :    \begin{alltt}database schema nomBd\end{alltt}       
 \item To quit the console :                        \begin{alltt}exit\end{alltt}  
 \end{itemize}
 
@@ -566,14 +444,148 @@ It is mostly used to define the schema, in a schema write transaction.\\
 
 \subsection{Using the App}
 
+\subsubsection{Opening the server from a terminal}
+\begin{itemize}
+\item Go to the right folder which contains the typedb.bat file ( example : typedb-all-windows-2.10.0/typedb-all-windows-2.10.0/ )
+\item Open the server : \begin{alltt}./typedb.bat server \end{alltt}
+\item Let that window opened in background
+\end{itemize}
+
+\subsubsection{Connecting to TypeDB}
+Then, from the app,
+\begin{itemize}
+\item Click on ‘Connect to TypeDB’ in the lower left window
+\item Keep the ‘TypeDB’ server selected, and rewrite the localhost already writen in the Adress section (example : localhost:1729), then click ‘Connect’
+\end{itemize}
+
+\subsubsection{Opening the project}
+Then, we can select the database we want to use in the lower left window and the folder project in the upper left window.
+
+\subsubsection{Use}
+    Once the opening done, we can use the App. For example we can create a database, write schemas or queries (.tql) , and display the results whether in the 'graph' section or in the 'text' section.
+    
 
 
 
 
 
 
+\subsection{Bugs ( remplacer ) }
+    
+    
+
+\section{Langage description}
+
+\subsection{General}
 
 
+\subsection{Langage possibilities and impossibilities}
+
+\subsubsection{Type Declarations}
+
+\begin{enumerate}
+
+\item Introducing the same name both as an entity and as a relation type \\
+It is impossible to have the same names for two different entities or relations and between them. \\ 
+The following expression isn't correct :  ( Invalid Query Pattern : the type variable 'test' has multiple 'Foo' constraints. )
+
+  \begin{alltt}
+    Foo sub entity;
+    Foo sub relation;
+  \end{alltt}
+
+
+\item Using the same attribute for different entities/relations \
+
+It is possible for different entities to own the same attribute :
+
+  \begin{alltt}
+     ent1 sub entity,
+       owns att1;
+     	
+     ent2 sub entity,
+       owns att1;
+    		
+    	 att1 sub attribute,
+       value string;
+  \end{alltt}
+  
+It also works using a relation related to this two entities, which owns this same attribute. \\
+But, we can't have the same attribute of an entity for which it is a subentity ( Invalid Type Write: The attribute type 'att1' has been inherited or overridden, and cannot be redeclared as an attribute.). The following expression isn't correct :
+
+\begin{alltt}
+     ent1 sub entity,
+       owns att1;
+     	
+     ent2 sub ent1,
+       owns att1;
+    		
+    	 att1 sub attribute,
+       value string;
+  \end{alltt}
+	
+\item Acyclicity of the type hierarchy \\
+The type hierarchy is acyclic; it isn't allowed to have any cycle as following. ( Invalid Type Write ) : there is a cyclic type hierarchy, which is not allowed: '[C2, C1]'. )
+
+  \begin{alltt}
+    C1 sub C2;
+    C2 sub C1;
+  \end{alltt}
+
+
+It is also impossible to introduce a type several times (Invalid Query Pattern : the type variable 'D' has multiple 'sub' constraints), like :
+
+  \begin{alltt}
+    C sub entity;
+    C1 sub C;
+    C2 sub C;
+    D sub C1;
+    D sub C2;
+  \end{alltt}
+
+
+\item Titre de la section ?\\
+It isn't possible have [titre] : (Invalid Type Write: The role type 'R1:role1' has been inherited or overridden, and cannot be redeclared.) The following expression isn't correct :
+
+\begin{alltt}
+     R1 sub relation,
+     relates role1;
+    
+     R2 sub R1;
+      
+    E1 sub entity,
+    plays R1:role1;
+    
+    E2 sub E1,
+    plays R2:role1;
+  \end{alltt}
+
+\end{enumerate}
+
+
+\subsubsection{Relations and Attributes}
+
+\begin{enumerate}
+\item Missing \texttt{relates} declaration \\
+
+It is indeed impossible to  What happens if there is no
+  \texttt{relates} declaration but the role is used in a \texttt{plays}
+  clause, such as in the following, if there is no \texttt{relates role1}
+  declaration?
+
+  \begin{alltt}
+rel1 sub relation;
+
+ent1 sub entity,
+  plays rel1:role1;
+  \end{alltt}
+
+\emph{Answer : It shows an error : Invalid Type Read: The type 'rel1:role1' does not exist. }
+
+\end{enumerate}
+
+
+\subsection{Langage inconsistencies}
 
 
 
