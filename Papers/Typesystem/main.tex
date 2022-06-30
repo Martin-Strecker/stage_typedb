@@ -325,7 +325,7 @@ transaction nomBd schema write
 We can type a request adapted to the mode we have chosen (for example for a read transaction, use a read request (match, get), or for a data write transaction, use an order which writes, modifies or deletes the data.).
 
 It can also be useful to know that we can use the ‘source’ command to avoid us to type the requests here in the terminal, using a file containing it: 
-        source example/file.tql
+\begin{alltt}source example/file.tql \end{alltt}
 It is mostly used to define the schema, in a schema write transaction.
 
 \emph{Note: sometimes, after returning our order, nothing is happening. In that case we have to do a ctrl c.}
@@ -403,7 +403,7 @@ transaction database-name data read --infer true
 \item Introducing the same name both as an entity and as a relation type
 
 It is impossible to have the same names for two different entities or relations and between them.
-The following expression is not correct: ( Invalid Query Pattern: the type variable 'test' has multiple 'Foo' constraints.).
+The following expression is not correct: ( Invalid Query Pattern: the type variable 'Foo' has multiple 'sub' constraints.).
 
   \begin{alltt}
     Foo sub entity;
@@ -442,7 +442,7 @@ But, we can't have the same attribute of an entity for which it is a subentity (
 	
 \item Acyclicity of the type hierarchy
 
-The type hierarchy is acyclic; it isn't allowed to have any cycle as following. ( Invalid Type Write ): there is a cyclic type hierarchy, which is not allowed: '[C2, C1]'.).
+The type hierarchy is acyclic; it isn't allowed to have any cycle as following. ( Invalid Type Write: there is a cyclic type hierarchy, which is not allowed: '[C2, C1]'.).
 
   \begin{alltt}
     C1 sub C2;
