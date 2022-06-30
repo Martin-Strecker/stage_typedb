@@ -1,4 +1,5 @@
-\documentclass[runningheads]{llncs}
+%\documentclass[runningheads]{llncs}
+\documentclass{article}
 
 \input{settings}
 \input{defs}
@@ -9,32 +10,33 @@
 \begin{document}
 \title{The TypeDB Type System}
 
-\author{TBD
+\author{
+Cécile Prieur
 % Jon Haël Brenas\inst{1} \and
 % Rachid Echahed\inst{2}\orcidID{0000-0002-8535-8057} \and
 % Martin Strecker\inst{3}\orcidID{0000-0001-9953-9871}
 }
-\institute{UPS \and
- CNRS and University of Grenoble, France
-}
+%\institute{UPS \and
+% CNRS and University of Grenoble, France
+%}
 \maketitle
 
 \begin{abstract}
 Trying to understand the TypeDB type system.
 \end{abstract}
 
-\keywords{ TBD
+%\keywords{ TBD
 % Automated Theorem Proving,
 % Modal Logic,
 % Graph Transformations,
 % Program Verification
-}
+%}
 
 % REMOVE THE FOLLOWING FOR FINAL VERSION  !!!!
 %\def\theHdefinition{\theHtheorem}
 
 %----------------------------------------------------------------------
-
+\tableofcontents
 
 %----------------------------------------------------------------------
 \section{Background}\label{sec:background}
@@ -273,7 +275,9 @@ contradiction with the \texttt{plays} declarations, see
 
 
 
-\section{How to use the TypeDB System in Windows 11}
+\section{How to use the TypeDB System}
+
+The following description gives an account of the use of TypeDB in Windows~11.
 
 \subsection{Using the terminal console}
 
@@ -281,33 +285,34 @@ contradiction with the \texttt{plays} declarations, see
 \subsubsection{Opening the server}
 
 \begin{itemize}
-\item Go to the right folder which contains the typedb.bat file ( example : typedb-all-windows-2.10.0/typedb-all-windows-2.10.0/ )
-\item Open the server : \begin{alltt}./typedb.bat server \end{alltt}
+\item Go to the right folder which contains the typedb.bat file ( example: typedb-all-windows-2.10.0/typedb-all-windows-2.10.0/ )
+\item Open the server: \begin{alltt}./typedb.bat server \end{alltt}
 \item Let that window opened in background
 \end{itemize}
 
 \subsubsection{Opening the console}
 \begin{itemize}
 \item Open a new terminal, and go to the same folder as before
-\item Open the console :   \begin{alltt}./typedb.bat console\end{alltt}     
+\item Open the console:   \begin{alltt}./typedb.bat console\end{alltt}     
 \end{itemize}
 
 \subsubsection{Console commands}
 
-Once the console is opened, we can type several commands to read or write informations about the databases. The console will allow us to communicate with the databases, so it is useful to know some of the most important orders we can use :
+Once the console is opened, we can type several commands to read or write informations about the databases. The console will allow us to communicate with the databases, so it is useful to know some of the most important orders we can use:
 
 \begin{itemize}
-\item To list the several databases existing in the server :    \begin{alltt}database list\end{alltt}       
-\item To show us the schema of a particular database :    \begin{alltt}database schema nomBd\end{alltt}       
-\item To quit the console :                        \begin{alltt}exit\end{alltt}  
+\item To list the several databases existing in the server:    \begin{alltt}database list\end{alltt}       
+\item To show us the schema of a particular database:    \begin{alltt}database schema nomBd\end{alltt}       
+\item To quit the console:                        \begin{alltt}exit\end{alltt}  
 \end{itemize}
 
   \subsubsection{Transactions}
-We can also use this console to make transactions, which are a block we open, and that we can commit at the end only if the order we typed was possible to make. This allows us to make the command at once and in case of an error, avoid that only one part of the order is made.
+We can also use this console to make transactions, which are a block we open, and that we can commit at the end only if the order we typed was possible to make. This ensures atomicity of the transactions. In other words this allows us to make the command at once and in case of an error, avoid that only one part of the order is made.
 
 \begin{enumerate}
-\item Opening  the transaction\\
-These transactions can be used in two modes : write or read. Also, we have to specify if we want to point to the schema or the data :
+\item Opening  the transaction
+
+These transactions can be used in two modes: write or read. Also, we have to specify if we want to point to the schema or the data:
 
 \begin{alltt}
 transaction nomBd data write
@@ -315,14 +320,15 @@ transaction nomBd data read
 transaction nomBd schema write
 \end{alltt}       
 
-\item Write the order we want to make in this transaction\\
-We can type a request adapted to the mode we have chosen (for example for a read transaction, use a read request (match, get), or for a data write transaction, use an order which writes, modifies or deletes the data.) For more information about the different requests, see below in the part requests.\\
+\item Write the order we want to make in this transaction
 
-It can also be useful to know that we can use the ‘source’ command to avoid us to type the requests here in the terminal, using a file containing it : 
+We can type a request adapted to the mode we have chosen (for example for a read transaction, use a read request (match, get), or for a data write transaction, use an order which writes, modifies or deletes the data.).
+
+It can also be useful to know that we can use the ‘source’ command to avoid us to type the requests here in the terminal, using a file containing it: 
         source example/file.tql
-It is mostly used to define the schema, in a schema write transaction.\\
+It is mostly used to define the schema, in a schema write transaction.
 
-\emph{Note : sometimes, after returning our order, nothing is happening. In that case we have to do a ctrl c.}\\
+\emph{Note: sometimes, after returning our order, nothing is happening. In that case we have to do a ctrl c.}
 
 \item Commit the transaction
 \begin{itemize}
@@ -337,8 +343,8 @@ It is mostly used to define the schema, in a schema write transaction.\\
 
 \subsubsection{Opening the server from a terminal}
 \begin{itemize}
-\item Go to the right folder which contains the typedb.bat file ( example : typedb-all-windows-2.10.0/typedb-all-windows-2.10.0/ )
-\item Open the server : \begin{alltt}./typedb.bat server \end{alltt}
+\item Go to the right folder which contains the typedb.bat file ( example: typedb-all-windows-2.10.0/typedb-all-windows-2.10.0/ )
+\item Open the server: \begin{alltt}./typedb.bat server \end{alltt}
 \item Let that window opened in background
 \end{itemize}
 
@@ -346,7 +352,7 @@ It is mostly used to define the schema, in a schema write transaction.\\
 Then, from the app,
 \begin{itemize}
 \item Click on ‘Connect to TypeDB’ in the lower left window
-\item Keep the ‘TypeDB’ server selected, and rewrite the localhost already writen in the Adress section (example : localhost:1729), then click ‘Connect’
+\item Keep the ‘TypeDB’ server selected, and rewrite the localhost already writen in the Adress section (example: localhost:1729), then click ‘Connect’
 \end{itemize}
 
 \subsubsection{Opening the project}
@@ -371,32 +377,33 @@ Then, we can select the database we want to use in the lower left window and the
 
 \section{Langage description}
 
-\subsection{General Using Notes}
+\subsection{General Usage Notes}
 
 
 \subsubsection{Schema}
 In the schema, the entities and relations don't require any "id" or key. Contrary to SQL, TypeDB assign automatically for each of them.
 
 \subsubsection{Queries}
-match : if we want to get all of the items of the match section, we don't have to do a "get"
+match: if we want to get all of the items of the match section, we don't have to do a "get"
 
 \subsubsection{Rules}
 
-To read data coming from Typedb rules, we have to add --infer true at the end of the read command : 
+To read data coming from Typedb rules, we have to add --infer true at the end of the read command: 
 \begin{alltt}
 transaction database-name data read --infer true
 \end{alltt}
 
 
-\subsection{Langage possibilities and impossibilities}
+\subsection{Expressivity and limitations}
 
 \subsubsection{Type Declarations}
 
 \begin{enumerate}
 
-\item Introducing the same name both as an entity and as a relation type \\
-It is impossible to have the same names for two different entities or relations and between them. \\ 
-The following expression isn't correct :  ( Invalid Query Pattern : the type variable 'test' has multiple 'Foo' constraints. )
+\item Introducing the same name both as an entity and as a relation type
+
+It is impossible to have the same names for two different entities or relations and between them.
+The following expression is not correct: ( Invalid Query Pattern: the type variable 'test' has multiple 'Foo' constraints.).
 
   \begin{alltt}
     Foo sub entity;
@@ -404,9 +411,9 @@ The following expression isn't correct :  ( Invalid Query Pattern : the type var
   \end{alltt}
 
 
-\item Using the same attribute for different entities/relations \
+\item Using the same attribute for different entities/relations
 
-It is possible for different entities to own the same attribute :
+It is possible for different entities to own the same attribute:
 
   \begin{alltt}
      ent1 sub entity,
@@ -420,7 +427,7 @@ It is possible for different entities to own the same attribute :
   \end{alltt}
   
 It also works using a relation related to this two entities, which owns this same attribute. \\
-But, we can't have the same attribute of an entity for which it is a subentity ( Invalid Type Write: The attribute type 'att1' has been inherited or overridden, and cannot be redeclared as an attribute.). The following expression isn't correct :
+But, we can't have the same attribute of an entity for which it is a subentity ( Invalid Type Write: The attribute type 'att1' has been inherited or overridden, and cannot be redeclared as an attribute.). The following expression is not correct:
 
 \begin{alltt}
      ent1 sub entity,
@@ -433,8 +440,9 @@ But, we can't have the same attribute of an entity for which it is a subentity (
        value string;
   \end{alltt}
 	
-\item Acyclicity of the type hierarchy \\
-The type hierarchy is acyclic; it isn't allowed to have any cycle as following. ( Invalid Type Write ) : there is a cyclic type hierarchy, which is not allowed: '[C2, C1]'. )
+\item Acyclicity of the type hierarchy
+
+The type hierarchy is acyclic; it isn't allowed to have any cycle as following. ( Invalid Type Write ): there is a cyclic type hierarchy, which is not allowed: '[C2, C1]'.).
 
   \begin{alltt}
     C1 sub C2;
@@ -442,7 +450,7 @@ The type hierarchy is acyclic; it isn't allowed to have any cycle as following. 
   \end{alltt}
 
 
-It is also impossible to introduce a type several times (Invalid Query Pattern : the type variable 'D' has multiple 'sub' constraints), like :
+It is also impossible to introduce a type several times (Invalid Query Pattern: the type variable 'D' has multiple 'sub' constraints), like:
 
   \begin{alltt}
     C sub entity;
@@ -453,8 +461,9 @@ It is also impossible to introduce a type several times (Invalid Query Pattern :
   \end{alltt}
 
 
-\item Titre de la section ?\\
-It isn't possible have [titre] : (Invalid Type Write: The role type 'R1:role1' has been inherited or overridden, and cannot be redeclared.) The following expression isn't correct :
+\item Titre de la section ?
+
+It isn't possible have [titre]: (Invalid Type Write: The role type 'R1:role1' has been inherited or overridden, and cannot be redeclared.) The following expression isn't correct:
 
 \begin{alltt}
      R1 sub relation,
@@ -479,7 +488,8 @@ It isn't possible have [titre] : (Invalid Type Write: The role type 'R1:role1' h
 \paragraph{Redundancy / conflict} The \texttt{relates} declarations seem to be redundant and possibly conflict with \texttt{plays} declarations. The following items try to clarify the situation.
 
 \begin{enumerate}
-\item Missing \texttt{relates} declaration \\
+\item Missing \texttt{relates} declaration
+
 It is indeed impossible to declare a role for an entity, which has not been declared for the relation it is from. The following expression isn't correct (Invalid Type Read: The type 'rel1:role1' does not exist.).
 
   \begin{alltt}
@@ -489,7 +499,8 @@ ent1 sub entity,
   plays rel1:role1;
   \end{alltt}
 
-\item Contradictory \texttt{relates} and \texttt{plays} declarations\\
+\item Contradictory \texttt{relates} and \texttt{plays} declarations
+
 It is indeed impossible for a role to be used in conjunction with a relation for which it has not been declared, such as the following (The type 'rel2:role1' does not exist).
 
   \begin{alltt}
@@ -512,8 +523,9 @@ declarations have been done, and only concentrate on the \texttt{plays}
 declarations.
 
 \begin{enumerate}
-\item Role redeclaration in two unrelated relations/entities \\
-It is possible to redeclare a role : this avoids us \emph{overloading}.
+\item Role redeclaration in two unrelated relations/entities
+
+It is possible to redeclare a role: this avoids us \emph{overloading}.
 
   \begin{alltt}
 rel1 sub relation,
@@ -528,8 +540,9 @@ ent2 sub entity,
   plays rel2:role1;
   \end{alltt}
  
-\item Role redeclaration for two relations that are subrelations \\
-This would amount to \emph{overriding}. This isn't possible : the following expression isn't correct (Invalid Type Write: The role type 'role1' is already declared by a supertype of 'rel2'.): 
+\item Role redeclaration for two relations that are subrelations
+
+This would amount to \emph{overriding}. This isn't possible: the following expression isn't correct (Invalid Type Write: The role type 'role1' is already declared by a supertype of 'rel2'.): 
   
   \begin{alltt}
 rel1 sub relation,
@@ -550,7 +563,8 @@ ent2 sub entity,
 \subsubsection{Queries}
 
 \begin{enumerate}
-\item Query pointing two indentical instances \\
+\item Query pointing two indentical instances
+
 We created two identical instances of an entity, with the same attribute values. When we do a match query to search for this values, the values are displayed only one time in the answer of the query.
 So, we can say that the queries display only all of the possibilities of the values researched, and the duplicate instances only one time (using a basic 'match' query).
 
@@ -561,7 +575,8 @@ So, we can say that the queries display only all of the possibilities of the val
 \subsubsection{Rules}
 
 \begin{enumerate}
-\item Rule affecting to an entity \\
+\item Rule affecting to an entity
+
 It isn't possible to create a rule as following (Rule 'est-vip' 'then' '\$p isa vip': must be exactly one attribute ownership, or exactly one relation.), so we can conclude that rules can only affect attributes or relations.
 \begin{alltt}
 personne sub entity,
@@ -584,12 +599,12 @@ when \{
 
 
 \item Attribute modification with a given value with a rule \\
-It is possible to modify an attribute thanks to a rule, such as :
+It is possible to modify an attribute thanks to a rule, such as:
 \begin{alltt}
 rule regle:
 when \{
   \$a isa ent1, has number1 \$x1;
-  \$b isa ent2, has number1 \$x2, has number2 \$y ;
+  \$b isa ent2, has number1 \$x2, has number2 \$y;
   (entier1 : \$a , entier2 : \$b ) isa duo;
   \$x2 > \$x1;
 \} then \{
@@ -598,13 +613,14 @@ when \{
 \end{alltt}
 
 
-\item Attribute modification with a variable with a rule \\
-It seems impossible to modify an attribute using a \$ variable in the rule, such as :
+\item Attribute modification with a variable with a rule
+
+It seems impossible to modify an attribute using a \$ variable in the rule, such as:
 \begin{alltt}
 rule regle:
 when \{
   \$a isa ent1, has number1 \$x1;
-  \$b isa ent2, has number1 \$x2, has number2 \$y ;
+  \$b isa ent2, has number1 \$x2, has number2 \$y;
   (entier1 : \$a , entier2 : \$b ) isa duo;
   \$x2 > \$x1;
 \} then \{
@@ -612,20 +628,13 @@ when \{
 \};
 \end{alltt}
 
-It shows an error : \emph{'regle' 'then' '\$b has number2 \$x1' tries to assign type 'number2' to variable 'x1', but this variable already had a type assigned by the rule 'when'. Try omitting this type assignment.}
-
-
-
-
+It shows an error: \emph{'regle' 'then' '\$b has number2 \$x1' tries to assign type 'number2' to variable 'x1', but this variable already had a type assigned by the rule 'when'. Try omitting this type assignment.}
 
 \end{enumerate}
 
-
-
-
 \subsection{Langage inconsistencies}
 
-When we write our queries, some logic errors are not found statically + in write mode when our match section isn't correct, 
+When we write our queries, some logic errors are not found statically and in write mode when our match section isn't correct, to be explored.
 
 
 
