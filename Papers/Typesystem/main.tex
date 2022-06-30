@@ -257,80 +257,6 @@ contradiction with the \texttt{plays} declarations, see
 
 \end{enumerate}
 
-\subsection{Relations and Attributes}\label{sec:questions_rels_attribs}
-
-\paragraph{Redundancy / conflict} The \texttt{relates} declarations seem to be
-redundant and possibly conflict with \texttt{plays} declarations. The
-following questions try to clarify the situation.
-
-\begin{enumerate}
-
-\item Contradictory \texttt{relates} and \texttt{plays} declarations: What
-  happens if a role is used in conjunction with a relation for which it has
-  not been declared, such as the following:
-
-  \begin{alltt}
-rel1 sub relation,
-  relates role1;
-
-rel2 sub relation,
-  relates role2;
-
-ent1 sub entity,
-  plays rel2:role1;
-  \end{alltt}
-
-\emph{Answer : It seems to work because it doesn't show any error. }
-
-
-\end{enumerate}
-
-\paragraph{Refinement and overriding} of \texttt{plays} declarations. In the
-following examples, we assume that all the required \texttt{relates}
-declarations have been done, and only concentrate on the \texttt{plays}
-declarations.
-
-\begin{enumerate}
-\item Is it possible to redeclare a role in two unrelated relations /
-  entities? This would amount to \emph{overloading}.
-
-  \begin{alltt}
-rel1 sub relation,
-     relates role1;
-rel2 sub relation,
-     relates role1;
-
-ent1 sub entity,
-  plays rel1:role1;
-
-ent2 sub entity,
-  plays rel2:role1;
-  \end{alltt}
-  
- 
-\emph{Answer : It seems to work because it doesn't show any error. }
- 
-\item Is it possible to redeclare a role? This would amount to
-  \emph{overriding}. The following illustrates the case for two relations that
-  are subrelations:
-  
-  \begin{alltt}
-rel1 sub relation,
-     relates role1;
-rel2 sub rel1,
-     relates role1;
-
-ent1 sub entity,
-  plays rel1:role1;
-
-ent2 sub entity,
-  plays rel2:role1;
-  \end{alltt}
-
-\emph{Answer : It shows an error : Invalid Type Write: The role type 'role1' is already declared by a supertype of 'rel2'. }
-  
-
-\end{enumerate}
 
 
 %......................................................................
@@ -345,41 +271,6 @@ ent2 sub entity,
 \end{enumerate}
 
 
-
-\subsection{Rules}
-
-To read data coming from Typedb rules, we have to add --infer true at the end of the read command : 
-\begin{alltt}
-transaction database-name data read --infer true
-\end{alltt}
-
-
-\begin{enumerate}
-\item Is it possible to define a rule as :
-\begin{alltt}
-personne sub entity,
-    plays vip:personne-role,
-    owns salaire;
-    
-vip sub personne;
-
-salaire sub attribute,
-  value long;
-
-rule est-vip:
-when {
-  \$p isa personne, has salaire \$s;
-  \$s > 10000;
-} then {
- \$p isa vip;
-};
-\end{alltt}
-
-\emph{Answer : Probably not, because it shows an error : Rule 'est-vip' 'then' '\$p isa vip': must be exactly one attribute ownership, or exactly one relation.
-So we can conclude that rules can only affect attributes or relations. }
-
-
-\end{enumerate}
 
 
 \section{How to use the TypeDB System in Windows 11}
@@ -470,13 +361,31 @@ Then, we can select the database we want to use in the lower left window and the
 
 
 
-\subsection{Bugs ( remplacer ) }
-    
-    
+\subsection{Issues}
+
+
+\begin{itemize}
+\item The App is crashing often when we do a right-click in the upper-left window to open a new file
+\item The write mode works even if we're doing a read query
+\end{itemize}
 
 \section{Langage description}
 
-\subsection{General}
+\subsection{General Using Notes}
+
+
+\subsubsection{Schema}
+In the schema, the entities and relations don't require any "id" or key. Contrary to SQL, TypeDB assign automatically for each of them.
+
+\subsubsection{Queries}
+match : if we want to get all of the items of the match section, we don't have to do a "get"
+
+\subsubsection{Rules}
+
+To read data coming from Typedb rules, we have to add --infer true at the end of the read command : 
+\begin{alltt}
+transaction database-name data read --infer true
+\end{alltt}
 
 
 \subsection{Langage possibilities and impossibilities}
@@ -565,13 +474,13 @@ It isn't possible have [titre] : (Invalid Type Write: The role type 'R1:role1' h
 
 \subsubsection{Relations and Attributes}
 
+
+
+\paragraph{Redundancy / conflict} The \texttt{relates} declarations seem to be redundant and possibly conflict with \texttt{plays} declarations. The following items try to clarify the situation.
+
 \begin{enumerate}
 \item Missing \texttt{relates} declaration \\
-
-It is indeed impossible to  What happens if there is no
-  \texttt{relates} declaration but the role is used in a \texttt{plays}
-  clause, such as in the following, if there is no \texttt{relates role1}
-  declaration?
+It is indeed impossible to declare a role for an entity, which has not been declared for the relation it is from. The following expression isn't correct (Invalid Type Read: The type 'rel1:role1' does not exist.).
 
   \begin{alltt}
 rel1 sub relation;
@@ -580,16 +489,143 @@ ent1 sub entity,
   plays rel1:role1;
   \end{alltt}
 
-\emph{Answer : It shows an error : Invalid Type Read: The type 'rel1:role1' does not exist. }
+\item Contradictory \texttt{relates} and \texttt{plays} declarations\\
+It is indeed impossible for a role to be used in conjunction with a relation for which it has not been declared, such as the following (The type 'rel2:role1' does not exist).
+
+  \begin{alltt}
+rel1 sub relation,
+  relates role1;
+
+rel2 sub relation,
+  relates role2;
+
+ent1 sub entity,
+  plays rel2:role1;
+  \end{alltt}
 
 \end{enumerate}
 
 
+\paragraph{Refinement and overriding} of \texttt{plays} declarations. In the
+following items, we assume that all the required \texttt{relates}
+declarations have been done, and only concentrate on the \texttt{plays}
+declarations.
+
+\begin{enumerate}
+\item Role redeclaration in two unrelated relations/entities \\
+It is possible to redeclare a role : this avoids us \emph{overloading}.
+
+  \begin{alltt}
+rel1 sub relation,
+     relates role1;
+rel2 sub relation,
+     relates role1;
+
+ent1 sub entity,
+  plays rel1:role1;
+
+ent2 sub entity,
+  plays rel2:role1;
+  \end{alltt}
+ 
+\item Role redeclaration for two relations that are subrelations \\
+This would amount to \emph{overriding}. This isn't possible : the following expression isn't correct (Invalid Type Write: The role type 'role1' is already declared by a supertype of 'rel2'.): 
+  
+  \begin{alltt}
+rel1 sub relation,
+     relates role1;
+rel2 sub rel1,
+     relates role1;
+
+ent1 sub entity,
+  plays rel1:role1;
+
+ent2 sub entity,
+  plays rel2:role1;
+  \end{alltt}
+  
+
+\end{enumerate}
+
+\subsubsection{Queries}
+
+\begin{enumerate}
+\item Query pointing two indentical instances \\
+We created two identical instances of an entity, with the same attribute values. When we do a match query to search for this values, the values are displayed only one time in the answer of the query.
+So, we can say that the queries display only all of the possibilities of the values researched, and the duplicate instances only one time (using a basic 'match' query).
+
+
+
+\end{enumerate}
+
+\subsubsection{Rules}
+
+\begin{enumerate}
+\item Rule affecting to an entity \\
+It isn't possible to create a rule as following (Rule 'est-vip' 'then' '\$p isa vip': must be exactly one attribute ownership, or exactly one relation.), so we can conclude that rules can only affect attributes or relations.
+\begin{alltt}
+personne sub entity,
+    plays vip:personne-role,
+    owns salaire;
+    
+vip sub personne;
+
+salaire sub attribute,
+  value long;
+
+rule est-vip:
+when \{
+  \$p isa personne, has salaire \$s;
+  \$s > 10000;
+\} then \{
+ \$p isa vip;
+\};
+\end{alltt}
+
+
+\item Attribute modification with a given value with a rule \\
+It is possible to modify an attribute thanks to a rule, such as :
+\begin{alltt}
+rule regle:
+when \{
+  \$a isa ent1, has number1 \$x1;
+  \$b isa ent2, has number1 \$x2, has number2 \$y ;
+  (entier1 : \$a , entier2 : \$b ) isa duo;
+  \$x2 > \$x1;
+\} then \{
+ \$b has y 10;
+\};
+\end{alltt}
+
+
+\item Attribute modification with a variable with a rule \\
+It seems impossible to modify an attribute using a \$ variable in the rule, such as :
+\begin{alltt}
+rule regle:
+when \{
+  \$a isa ent1, has number1 \$x1;
+  \$b isa ent2, has number1 \$x2, has number2 \$y ;
+  (entier1 : \$a , entier2 : \$b ) isa duo;
+  \$x2 > \$x1;
+\} then \{
+ \$b has number2 \$x1;
+\};
+\end{alltt}
+
+It shows an error : \emph{'regle' 'then' '\$b has number2 \$x1' tries to assign type 'number2' to variable 'x1', but this variable already had a type assigned by the rule 'when'. Try omitting this type assignment.}
+
+
+
+
+
+\end{enumerate}
+
+
+
+
 \subsection{Langage inconsistencies}
 
-
-
-
+When we write our queries, some logic errors are not found statically + in write mode when our match section isn't correct, 
 
 
 
