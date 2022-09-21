@@ -306,6 +306,11 @@ Once the console is opened, we can type several commands to read or write inform
 \item To quit the console:                        \begin{alltt}exit\end{alltt}  
 \end{itemize}
 
+\subsubsection{Creating a database}
+
+With \texttt{database create \emph{name}}
+
+
   \subsubsection{Transactions}
 We can also use this console to make transactions, which are a block we open, and that we can commit at the end only if the order we typed was possible to make. This ensures atomicity of the transactions. In other words this allows us to make the command at once and in case of an error, avoid that only one part of the order is made.
 
@@ -332,8 +337,11 @@ It is mostly used to define the schema, in a schema write transaction.
 
 \item Commit the transaction
 \begin{itemize}
-\item In the write mode, it is very important not to forget to type commit after having returned our order. Else, even if our order didn’t show any error, nothing will be made.
-\item In the read mode, to quit, ctrl c
+\item In the write mode, it is very important not to forget to type commit
+  after having returned our order, by issuing the \texttt{commit}
+  command. Else, even if our order didn’t show any error, nothing will be
+  made.
+\item In the read mode, to quit without committing, type \texttt{ctrl-c}
 \end{itemize}
 
 \end{enumerate}
