@@ -1,10 +1,12 @@
 theory Syntax imports Main
 begin
 
+
 lemma simplImpl: "A \<longrightarrow> A"
 apply (rule impI)
 apply assumption
   done
+
 
 type_synonym name = string
 
@@ -34,6 +36,9 @@ datatype tp
 datatype tp_rel 
   = Owns | Plays | Relates | Sub
 
+(* The context is meant to be constructed in a stack-wise fashion, 
+  with decreasing recency from right to left.
+ *)
 datatype ctxt_def 
   = Ctxt_def tp tp_rel tp
   | Ctxt_plays_def tp tp tp
@@ -42,6 +47,8 @@ type_synonym ctxt = "ctxt_def list"
 
 
 (* or should this only be a name set  *)
+
+
 (* Declaration of attributes *)
 definition attribute_decls :: "ctxt => tp set" where
 "attribute_decls c = {}"
